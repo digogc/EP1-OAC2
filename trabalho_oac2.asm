@@ -697,7 +697,7 @@ calcular_media_ytrain:
 	
 	# Tamanho do vetor com os índices das K menores distâncias em int.
 	la $t0, k
-	l.d $t0, 0($t0)
+	lw $t0, 0($t0)
 	
 	# Para cada valor do arranjo em $a1.
 	# Número de valores trabalhados.
@@ -726,9 +726,13 @@ calcular_media_ytrain:
 	# Converter o número inteiro em $t0 para um float, em $f2.
 	div.d $f0, $f0, $f4
 	
-	# Retornar, em um endereço.
-	subi $sp, $sp, 8
-	s.d $f0, 0($sp)
+	# Aloca um espaço na memória para retornar o resultado
+	li $a0, 8
+	li $v0, 9
+	syscall
+	
+	# Salva o resultado no endereço alocado e retorna o endereço
+	s.d $f0, 0($v0)
 	
 	jr $ra
 	
@@ -739,7 +743,7 @@ calcular_media_ytrain:
 achar_k_menores_distancias:
     move $t0, $a0         # t0 = endereço do vetor k
     move $t1, $a1         # t1 = endereço do vetor de distâncias
-    la $t8, numero_zero  # f0 = 0.0
+    la $t8, numero_0  # f0 = 0.0
     l.d $f0, 0($t8)       # f6 = maior valor
 
     # calculo o tamanho do vetor de distâncias
