@@ -15,6 +15,7 @@ h: .word 1
 k: .word 2
 k_double: .double 2.0
 maior_valor: .double 1.79769E+308
+linhas_matriz: .space 4
 
 .text
 .globl main
@@ -25,6 +26,9 @@ main:
 	move $s0, $v0
 	# Início dos valores de Xtest: $s1.
 	move $s1, $v1
+
+	# Calcular o número de linhas e salvar na memória
+	jal calcula_linhas
 
 	# Montar Ytrain.
 	# Tem como parâmetro: endereço base da Matriz de Xtrain.
@@ -46,10 +50,6 @@ main:
 	jal montar_matriz
 	# Início da Matriz de Xtest: $s1
 	move $s1, $v0
-	
-	
-	
-	
 	
 	# Alocar espaço para Vetor de Distâncias.
 	li $a0, 479
@@ -833,7 +833,22 @@ primeiro_negativo:
     s.d $f2, 0($t1)
     j volta_primeiro_negativo
 
+############################### FUNÇÃO QUE CALCULA A QUANTIDADE DE LINHAS DAS MATRIZES
+# calcula a quantidade de linhas nas matrizes e escreve esse valor em linhas_matriz
 
+calcula_linhas:
+	# Quantidade total de linhas.
+	la $s6, tamanho
+	lw $s6, 0($s6)
+	addi $s6, $s6, 1
+	la $t9, w
+	lw $t9, 0($t9)
+	la $t8, h
+	lw $t8, 0($t8)
+	add $t9, $t9, $t8
+	sub $s6, $s6, $t9
+	sw $s6, linhas_matriz
+	
 # Lógica para escrever em arquivo.
 # Divide, até ter algo menos que 10. Escreve o dígito inteiro.
 # Se dividi 2 vezes, faço o caractere que escreve * 100 e subtraio do número inicial.
