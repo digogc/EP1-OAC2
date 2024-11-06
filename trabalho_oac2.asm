@@ -34,7 +34,7 @@ main:
 	# Tem como parâmetro: endereço base da Matriz de Xtrain.
 	move $a0, $s0
 	jal montar_ytrain
-	# Início da Arranjo de YTrain: $s2
+	# Início do Arranjo de YTrain: $s2
 	move $s2, $v0
 
 	# Montar matriz Xtrain.
@@ -51,15 +51,22 @@ main:
 	# Início da Matriz de Xtest: $s1
 	move $s1, $v0
 	
-	# Alocar espaço para Vetor de Distâncias.
-	li $a0, 479
-	jal alocar_vetores_ytest_e_distancias
-	move $a3, $v0 # Endereço base do Vetor de Distâncias.
-	
+	move $a0, $s0		# endereço de Xtrain em a0
+	move $a1, $s1		# endereço de Xtest em a1
+	move $a2, $s2		# endereço de Ytrain em a2
+	jal knn
 	
 ############################################################################################################
 # essa parte podemos copiar e colar na knn, a maneira de utilizar o calcular_vetor_distâncias está correta #
 ############################################################################################################
+#		
+#	# Alocar espaço para Vetor de Distâncias.
+#	li $a0, 479
+#	jal alocar_vetores_ytest_e_distancias
+#	move $a3, $v0 # Endereço base do Vetor de Distâncias.
+#	
+#	
+#
 #
 #	# Para cada índice de linha em Xtest, chamar "calcular_vetor_distancias"
 #	# Linhas de Xtest já usadas.
@@ -858,3 +865,63 @@ calcula_linhas:
 # Escrevo e subtraio o que coloquei (dividido pelo número de mults).
 # E assim vai.
 # No arquivo, ele quer precisão de 2 casas.
+
+# Função KNN
+# Função que estima valores para YTest utilizando um algoritmo KNN
+# Recebe como parâmetro: endereço de matriz x_train, endereço de matriz x_test e endereço de vetor y_train
+knn:
+	move $s0, $a0	# s0 = endereço de matriz x_train
+	move $s1, $a1	# s1 = endereço de matriz x_test
+	move $s2, $a2	# s2 = endereço de vetor y_train
+	
+	# Salvar em sp o $ra, porque teremos alguns jumps aqui dentro
+	subi $sp, $sp, 4
+	sw $ra, 0($sp)
+	
+	# Alocar espaço para Vetor de Distâncias.
+	la $s6, linhas_matriz
+	lw $s6, 0($s6)
+	jal alocar_vetores_ytest_e_distancias
+	move $s3, $v0 # Endereço base do Vetor de Distâncias = s3
+	move $s4, $v1 # Endereço base do Vetor de Ytest = s4
+	
+	jal alocar_vetor_k
+	move $s5, $v0	# Endereço base do Vetor de tamanho k = s5
+	
+	# Para cada índice de linha em Xtest, chamar "calcular_vetor_distancias"
+	# Linhas de Xtest já usadas.
+	li $s7, 0
+		chamar_calcular_distancias:
+		beq $s7, $s6, fim_chamar_distancia
+		move $a0, $s0
+		move $a1, $s1
+		move $a2, $s7			# indice da linha fixada em X test
+		move $a3, $s3
+		jal calcular_vetor_distancias
+		
+		# Aqui eu tenho que chamar a função para achar as k menores distancias
+		move $a0, $s5			# endereço do vetor de tamanho k
+		move $a1, $s3			# endereço base do vetor de distancias
+		jal achar_k_menores_distancias
+		
+		# Aqui eu tenho que chamar a função que calcula o valor correto de y test
+		move $a0, $s2
+		move $a1, $s5
+		jal calcular_media_ytrain
+		
+		l.d $f20, 0($v0)		# Agora f20 possui o valor correto para ser armazenado
+
+		mul $t0, $s7, 8		# Encontra o deslocamento correto para armazenar
+		add $t0, $t0, $s4	# Encontra o endereço correto para armazenar em ytest
+
+		s.d $f20, 0($t0)		# Armazenar o valor de ytest no local correto
+		
+		addi $s7, $s7, 1			# ir para a próxima linha fixada
+		j chamar_calcular_distancias	
+
+	fim_chamar_distancia:
+	
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	
+	jr $ra
