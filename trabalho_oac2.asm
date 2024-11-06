@@ -688,12 +688,16 @@ calcular_vetor_distancias:
 	
 ####################     FUNÇÃO QUE CALCULA A MÉDIA DOS VALORES EM "YTRAIN" CORRESPONDENTES ÀS K MENORES DISTÂNCIAS
 # Parâmetros:
-# $a0: Endereço base da matriz de Ytrain.
+# $a0: Endereço base do vetor de Ytrain.
 # $a1: Endereço base do vetor com os índices das K menores distâncias.
 calcular_media_ytrain:
-	# Tamanho do vetor com os índices das K menores distâncias.
+	# Tamanho do vetor com os índices das K menores distâncias em double.
 	la $t0, k_double
 	l.d $f4, 0($t0)
+	
+	# Tamanho do vetor com os índices das K menores distâncias em int.
+	la $t0, k
+	l.d $t0, 0($t0)
 	
 	# Para cada valor do arranjo em $a1.
 	# Número de valores trabalhados.
@@ -729,77 +733,6 @@ calcular_media_ytrain:
 	jr $ra
 	
 ################ FUNÇÃO QUE ENCONTRA O K MENORES VALORES DE UM VETOR
-# Recebe: endereço do vetor k, endereço do vetor de distâncias
-# Retorna: endereço do vetor com os k menores valores
-achar_k_menores_distancias:
-	move $t0, $a0         # t0 = endereço do vetor k
-	move $t1, $a1         # t1 = endereço do vetor de distâncias
-	
-	# calculo o tamanho do vetor de distâncias
-	la $t2, tamanho
-	lw $t2, 0($t0)
-	la $t3, w
-	lw $t3, 0($t2)
-	la $t6, h
-	lw $t6, 0($t6)
-	addi $t4, $t2, 1
-	add $t5, $t3, $t6
-	sub $t4, $t4, $t5
-	move $t2, $t4     # t2 = tamanho do vetor de distâncias
-	
-	la $t5, k
-	lw $t5, 0($t5)     # t5 = valor de k
-	
-	la $t8, maior_valor
-	l.d $f6, 0($t4)     # salvo o maior valor em f6
-	    
-	li $t3, 0            # t3 = contador de elementos no vetor de K
-	encontrar_k_valores:
-		beq $t3, $t5, fim_k_valores
-		# addi $t3, $t3, 1 tem que adicionar isso no final para poder usar como indice de onde guardar em k
-
-		#guardar o primeiro elemento em $f0 para comparações
-		l.d $f2, 0($t1)
-		li $t4, 0            # t4 = índice para percorrer
-		# percorrer o array de distâncias e econtrar o menor elemento
-		encontrar_menor_valor:
-			beq $t4, $t2, fim_menor_valor
-			mul $t7, $t4, 8
-			add $t7, $t1, $t7
-			l.d $f4, 0($t7)  # f4 = valor atual
-			c.lt.d $f4, $f2
-			bc1t achei_menor
-			volta_encontrar_menor:
-			addi $t4, $t4, 1
-			j encontrar_menor_valor
-	        
-		#salvar o indice e colocar o maior valor no lugar
-		fim_menor_valor:
-		add $t7, $t0, $t3 # t7 = endereço onde salvar o indice
-		sw $t6, 0($t7)    # salvar o indice na posição correta no vetor k
-
-		addi $t3, $t3, 1  # incrementar o contador de elementos ja armazenados em k
-
-		#salvar o maior valor no lugar do menor, calcular a posição correta e salvar o maior_valor
-            
-		add $t7, $t1, $t6       #posição para inserir maior valor
-		s.d $f6, 0($t7)         #salvar o maior valor na posição em que o menor valor estava anteriormente
-
-		j encontrar_k_valores
-    
-	fim_k_valores:
-	move $v0, $a0 #retornar o endereço do vetor k
-	jr $ra
-
-achei_menor:
-mov.d $f2, $f4  # f2 vira o menor valor para futuras comparações
-move $t6, $t4   # t6 salva o indice do menor valor, para conseguir sobrescrever e salvar no vetor k
-j volta_encontrar_menor
-
-# OBSERVAÇÃO IMPORTANTE APAGAR DEPOIS: TEM UMA GAMBIARRA PARA NÃO TER QUE SALVAR O $RA, se chama volta_encontrar_menor
-
-############################################ ENCONTRAR K MENORES VALORES NO ARRANJO DE DISTANCIAS
-
 # Função que encontra os menores k valores de um vetor
 # Recebe: endereço do vetor k, endereço do vetor de distâncias
 # Retorna: endereço do vetor com os k menores valores
