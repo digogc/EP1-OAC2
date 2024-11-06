@@ -56,6 +56,28 @@ main:
 	move $a2, $s2		# endereço de Ytrain em a2
 	jal knn
 	
+	move $t0, $v0
+	
+	l.d $f12, 0($t0)
+	li $v0, 3
+	syscall
+	
+	l.d $f12, 8($t0)
+	li $v0, 3
+	syscall
+	
+	l.d $f12, 16($t0)
+	li $v0, 3
+	syscall
+	
+	l.d $f12, 24($t0)
+	li $v0, 3
+	syscall
+	
+	l.d $f12, 32($t0)
+	li $v0, 3
+	syscall
+	
 ############################################################################################################
 # essa parte podemos copiar e colar na knn, a maneira de utilizar o calcular_vetor_distâncias está correta #
 ############################################################################################################
@@ -923,5 +945,8 @@ knn:
 	
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
+	
+	# Retorna endereço do vetor ytest
+	move $v0, $s4
 	
 	jr $ra
