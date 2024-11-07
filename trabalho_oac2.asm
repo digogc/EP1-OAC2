@@ -1,5 +1,5 @@
 # LEITURA DE AMBOS OS ARQUIVOS.
-.data:
+.data
 xtrain: .asciiz "C:/Users/digog/OneDrive/Área de Trabalho/Xtrain.txt"
 xtest: .asciiz "C:/Users/digog/OneDrive/Área de Trabalho/Xtest.txt"
 buffer: .space 1
