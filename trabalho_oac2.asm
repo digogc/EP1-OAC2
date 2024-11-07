@@ -634,11 +634,15 @@ calcular_vetor_distancias:
 	move $t1, $a0
 		
 	# Alocar espaço para vetor de Ws (que terá w doubles).
-	subi $sp, $sp, 4
+	subi $sp, $sp, 12
 	sw $ra, 0($sp)
+	sw $t0, 4($sp)
+	sw $t1, 8($sp)
 	jal alocar_vetor_Ws
+	lw $t1, 8($sp)
+	lw $t0, 4($sp)
 	lw $ra, 0($sp)
-	addi $sp, $sp, 4
+	addi $sp, $sp, 12
 	move $t3, $v0
 	# Agora, o endereço base do vetor de Ws está em $t3.
 	
