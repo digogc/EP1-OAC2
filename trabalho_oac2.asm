@@ -881,6 +881,7 @@ calcula_linhas:
 	add $t9, $t9, $t8
 	sub $s6, $s6, $t9
 	sw $s6, linhas_matriz
+	jr $ra
 	
 # Lógica para escrever em arquivo.
 # Divide, até ter algo menos que 10. Escreve o dígito inteiro.
