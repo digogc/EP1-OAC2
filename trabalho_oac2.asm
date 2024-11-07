@@ -908,6 +908,7 @@ knn:
 	# Alocar espaço para Vetor de Distâncias.
 	la $s6, linhas_matriz
 	lw $s6, 0($s6)
+	move $a0, $s6
 	jal alocar_vetores_ytest_e_distancias
 	move $s3, $v0 # Endereço base do Vetor de Distâncias = s3
 	move $s4, $v1 # Endereço base do Vetor de Ytest = s4
