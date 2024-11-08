@@ -436,7 +436,9 @@ montar_matriz:
 	
 	# Espaço total ocupado pela matriz, em $t5.
 	mul $t5, $t0, $t1   # Calcula o total de elementos da matriz, em $t5
-	mul $t5, $t5, 8   # Calculo do total de bytes necessários, em $t5.
+	# mul $t5, $t5, 8 em intruções:  # Calculo do total de bytes necessários, em $t5.
+	addi $at, $0, 8
+	mul $t5, $t5, $at
 	
 	# Aloca o espaço necessário para a matriz.
 	move $a0, $t5       # Carrega o total de bytes necessários para syscall
@@ -450,14 +452,20 @@ montar_matriz:
 	li $t4, 0
 	preenche_linha:
 		# Deslocamento do início dos dados que quero pegar em relação ao início dos dados.
-		mul $t5, $t4, 8
+		# mul $t5, $t4, 8 em intruções:
+		addi $at, $0, 8
+		mul $t5, $t4, $at
+		
 		# Endereço inicial do conjunto que quero pegar.
 		add $t5, $t3, $t5
 		# Elementos já preenchidos na linha.
 		li $t7, 0
 		preenche_elemento:
 			# Deslocamento do dado que quero pegar em relação ao início da "linha"
-			mul $t8, $t7, 8
+			# mul $t8, $t7, 8 em intruções:
+			addi $at, $0, 8
+			mul $t8, $t7, $at
+			
 			# Endereço do dado que quero pegar.
 			add $t8, $t5, $t8
 			# Carrega o dado.
@@ -505,7 +513,9 @@ montar_ytrain:
 	sub $t1, $t1, $t2
 	
 	# Calcular espaço necessário para matriz do Ytrain, em $t2.
-	mul $t2, $t1, 8
+	# mul $t2, $t1, 8 em intruções:
+	addi $at, $0, 8
+	mul $t2, $t1, $at
 	
 	# Guardar endereço base da matriz de Xtrain em $t3.
 	move $t3, $a0
@@ -526,8 +536,14 @@ montar_ytrain:
 		# Posição do valor a ser colocado na matriz YTrain, em $t6.
 		add $t6, $t9, $t8
 		subi $t6, $t6, 1
-		mul $t6, $t6, 8
-		mul $t7, $t5, 8
+		# mul $t6, $t6, 8 em intruções:
+		addi $at, $0, 8
+		mul $t6, $t6, $at
+		
+		# mul $t7, $t5, 8 em intruções:
+		addi $at, $0, 8
+		mul $t7, $t5, $at
+		
 		add $t6, $t6, $t7
 		add $t6, $t3, $t6
 		# Valor a ser colocado na matriz YTrain, em $f0.
@@ -536,7 +552,10 @@ montar_ytrain:
 		addu $at, $at, $t6
 		ldc1 $f0, 0($at)
 		# Posição de YTrain em que o valor deve ser guardado, em $t6.
-		mul $t6, $t5, 8
+		# mul $t6, $t5, 8 em intruções:
+		addi $at, $0, 8
+		mul $t6, $t5, $at
+	
 		add $t6, $t4, $t6
 		# s.d $f0, 0($t6) em instruções:
 		lui $at, 0
@@ -555,7 +574,10 @@ montar_ytrain:
 # Recebe como parâmetro a quantidade de elementos que os vetores terão
 # Retorna o endereço base do vetor ytest e endereço base de distâncias
 alocar_vetores_ytest_e_distancias:
-    mul $a0, $a0, 8     # calcula a quantidade de bytes necessárias
+    # mul $a0, $a0, 8 em instruções:    # calcula a quantidade de bytes necessárias
+    addi $at, $0, 8
+    mul $a0, $a0, $at
+    
     li $v0, 9           # Chamada para alocar memória do primeiro vetor
     syscall
     move $v1, $v0       # salva o endereço base do vetor 1
@@ -570,7 +592,10 @@ alocar_vetores_ytest_e_distancias:
 alocar_vetor_k:
     la $t0, k           # carrega o endereço da variável k
     lw $t0, 0($t0)      # carrega o valor de k
-    mul $t0, $t0, 4     # calcula a quantidade de bytes necessárias
+    # mul $t0, $t0, 4 em instruções:    # calcula a quantidade de bytes necessárias
+    addi $at, $0, 4
+    mul $t0, $t0, $at
+    
     move $a0, $t0       # passa o tamanho do vetor como parâmetro
     li $v0, 9           # Chamada para alocar memória
     syscall
@@ -581,7 +606,10 @@ alocar_vetor_k:
 alocar_vetor_Ws:
 	la $t2, w
 	lw $t2, 0($t2)
-	mul $t3, $t2, 8
+	# mul $t3, $t2, 8 em intruções:
+	addi $at, $0, 8
+	mul $t3, $t2, $at
+	
 	move $a0, $t3
 	li $v0, 9
 	syscall
@@ -607,7 +635,9 @@ calcular_vetor_distancias:
 	# Quantos elementos há antes do início dessa linha?
 	mul $t0, $t0, $t2
 	# Quantos bytes isso ocupa?
-	mul $t0, $t0, 8
+	# mul $t0, $t0, 8 em intruções:
+	addi $at, $0, 8
+	mul $t0, $t0, $at
 	# Em qual endereço isso está?
 	add $t0, $t0, $t1
 	
@@ -635,7 +665,10 @@ calcular_vetor_distancias:
 	guardar_no_vetor_Ws:
 		beq $t4, $t2, fim_guardar_no_vetor_Ws
 		# Endereço inicial do que tenho que guardar e de onde vou guardar.
-		mul $t5, $t4, 8
+		# mul $t5, $t4, 8 em intruções:
+		addi $at, $0, 8
+		mul $t5, $t4, $at
+		
 		add $t6, $t3, $t5 # Endereço de onde tenho que guardar.
 		add $t5, $t0, $t5 # Endereço do que tenho que guardar.
 		# l.d $f0, 0($t5) em instruções:
@@ -676,7 +709,10 @@ calcular_vetor_distancias:
 			beq $t0, $t4, fim_calcular_linha
 			# Obter endereço base da matriz Xtrain que quero considerar.
 			mul $t5, $t0, $t2	# linhas calculadas*w
-			mul $t5, $t5, 8		# em bytes
+			# mul $t5, $t5, 8 em intruções:		# em bytes
+			addi $at, $0, 8
+			mul $t5, $t5, $at
+			
 			add $t5, $t1, $t5	# + endereço base do XTrain
 			# Verificar cada valor dessa linha.
 			la $t6, numero_0
@@ -689,7 +725,9 @@ calcular_vetor_distancias:
 			calcular_valor:
 				beq $t6, $t2, fim_calcular_valor	# Se t6 for igual a w, parar
 				# Obter o deslocamento.
-				mul $t7, $t6, 8
+				# mul $t7, $t6, 8 em intruções:
+				addi $at, $0, 8
+				mul $t7, $t6, $at
 				# Endereço do elemento em Xtrain.
 				add $t8, $t5, $t7	# Adiciona posição*8  no end base da linha
 				# Endereço do elemento na linha fixa de Xtest (no vetor de Ws).
@@ -712,7 +750,10 @@ calcular_vetor_distancias:
 			fim_calcular_valor:
 			# Guardar a distância na posição correta do vetor de Distâncias.
 			# Posicação onde devo guardar.
-			mul $t7, $t0, 8
+			# mul $t7, $t0, 8 em intruções:
+			addi $at, $0, 8
+			mul $t7, $t0, $at
+			
 			add $t7, $a3, $t7
 			# s.d $f4, 0($t7) em intruções:
 			lui $at, 0
@@ -753,11 +794,17 @@ calcular_media_ytrain:
 	contabilizar:
 		beq $t0, $t1, fim_contabilizar
 		# Descobrir qual é o índice.
-		mul $t2, $t1, 4
+		# mul $t2, $t1, 4 em intruções:
+		addi $at, $0, 4
+		mul $t2, $t1, $at
+		
 		add $t2, $a1, $t2
 		lw $t2, 0($t2)
 		# Descobrir o valor em Ytrain correspondente ao índice $t2.
-		mul $t2, $t2, 8
+		# mul $t2, $t2, 8 em intruções:
+		addi $at, $0, 8
+		mul $t2, $t2, $at
+		
 		add $t2, $t2, $a0
 		# l.d $f2, 0($t2) em instruções:
 		lui $at, 0
@@ -843,7 +890,10 @@ achar_k_menores_distancias:
         # percorrer o array de distâncias e econtrar o menor elemento
         encontrar_menor_valor:
             beq $t4, $t2, fim_menor_valor
-            mul $t7, $t4, 8
+            # mul $t7, $t4, 8 em intruções:
+            addi $at, $0, 8
+	    mul $t7, $t4, $at
+	    
             add $t7, $t1, $t7
             # l.d $f4, 0($t7) em instruções:  # f4 = valor atual
             lui $at, 0
@@ -862,14 +912,20 @@ achar_k_menores_distancias:
         
         #salvar o indice e colocar o maior valor no lugar
         fim_menor_valor:
-            mul $t9, $t3, 4   # transforma o contador em um uma posição de .word
+            # mul $t9, $t3, 4  em instruções: # transforma o contador em um uma posição de .word
+            addi $at, $0, 4
+	    mul $t9, $t3, $at
+	    
             add $t7, $t0, $t9 # t7 = endereço onde salvar o indice
             sw $t6, 0($t7)    # salvar o indice na posição correta no vetor k
 
             addi $t3, $t3, 1  # incrementar o contador de elementos ja armazenados em k
 
             #salvar o maior valor no lugar do menor, calcular a posição correta e salvar o maior_valor
-            mul $t8, $t6, 8	   # conversao para bytes
+            # mul $t8, $t6, 8 em intruções:	   # conversao para bytes
+            addi $at, $0, 8
+	    mul $t8, $t6, $at
+	    
             add $t7, $t1, $t8       #posição para inserir maior valor
             # s.d $f6, 0($t7) em instruções:   #salvar o maior valor na posição em que o menor valor estava anteriormente
 	    lui $at, 0
@@ -890,7 +946,10 @@ achei_menor:
 e_negativo:
     sub.d $f4, $f0, $f4 # transformar o valor negativo em positivo
     # armazenar o valor positivo no lugar do negativo
-    mul $t9, $t4, 8
+    # mul $t9, $t4, 8 em instruções:
+    addi $at, $0, 8
+    mul $t9, $t4, $at
+    
     add $t7, $t1, $t9
     # s.d $f4, 0($t7) em intruções:
     lui $at, 0
@@ -975,7 +1034,10 @@ knn:
 		addu $at, $at, $v0
 		ldc1 $f20, 0($at)
 
-		mul $t0, $s7, 8		# Encontra o deslocamento correto para armazenar
+		# mul $t0, $s7, 8 em intruções:		# Encontra o deslocamento correto para armazenar
+		addi $at, $0, 8
+		mul $t0, $s7, $at
+		
 		add $t0, $t0, $s4	# Encontra o endereço correto para armazenar em ytest
 
 		# s.d $f20, 0($t0) em instruções:	# Armazenar o valor de ytest no local correto
@@ -1036,7 +1098,10 @@ escrever_ytest:
 		# Inicializa N para quantidade de divisões por 10
 		li $s4, 0
 		# Encontrar endereço da linha
-		mul $t0, $s2, 8
+		# mul $t0, $s2, 8 em instruções:
+		addi $at, $0, 8
+		mul $t0, $s2, $at
+		
 		add $t0, $t0, $s0
 		# Carrega o valor que esta na linha em f0
 		# l.d $f0, 0($t0) em instruções:
