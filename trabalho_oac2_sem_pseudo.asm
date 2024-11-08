@@ -164,7 +164,11 @@ j inspecionar_num_elementos_xtest
 	ler_novo_num_xtrain:
 	# Resetar $f0.
 	la $t0, numero_0
-	l.d $f0, 0($t0)
+	# l.d $f0, 0($t0) em instruções:
+	lui $at, 0
+	addu $at, $at, $t0
+	ldc1 $f0, 0($at)
+	
 	ler_caractere_xtrain:
 	move $a0, $s0
 	la $a1, buffer
@@ -194,7 +198,11 @@ j inspecionar_num_elementos_xtest
 	
 	# Atualizar o registrador que guarda o número que está sendo trabalhado.
 	la $t3, numero_10
-	l.d $f4, 0($t3)
+	# l.d $f4, 0($t3) em instruções:
+	lui $at, 0
+	addu $at, $at, $t3
+	ldc1 $f4, 0($at)
+	
 	mul.d $f0, $f0, $f4
 	add.d $f0, $f0, $f2
 	
@@ -209,7 +217,11 @@ j inspecionar_num_elementos_xtest
 	eh_ponto_xtrain:
 	# Contador de casas decimais.
 	la $t3, numero_1
-	l.d $f6, 0($t3)
+	# l.d $f6, 0($t3) em instruções:
+	lui $at, 0
+	addu $at, $at, $t3
+	ldc1 $f6, 0($at)
+	
 	# Lê as casas decimais.
 	casas_decimais_xtrain:
 	move $a0, $s0
@@ -273,7 +285,10 @@ addi $t7, $t7, 8
 	ler_novo_num_xtest:
 		# Resetar $f0.
 		la $t0, numero_0
-		l.d $f0, 0($t0)
+		# l.d $f0, 0($t0) em instruções:
+		lui $at, 0
+		addu $at, $at, $t0
+		ldc1 $f0, 0($at)
 		ler_caractere_xtest:
 			move $a0, $s0
 			la $a1, buffer
@@ -303,7 +318,11 @@ addi $t7, $t7, 8
 	
 	# Atualizar o registrador que guarda o número que está sendo trabalhado.
 	la $t3, numero_10
-	l.d $f4, 0($t3)
+	# l.d $f4, 0($t3) em instruções:
+	lui $at, 0
+	addu $at, $at, $t3
+	ldc1 $f4, 0($at)
+
 	mul.d $f0, $f0, $f4
 	add.d $f0, $f0, $f2
 	
@@ -318,7 +337,10 @@ addi $t7, $t7, 8
 eh_ponto_xtest:
 # Contador de casas decimais.
 la $t3, numero_1
-l.d $f6, 0($t3)
+# l.d $f6, 0($t3) em instruções:
+lui $at, 0
+addu $at, $at, $t3
+ldc1 $f6, 0($at)
 	# Lê as casas decimais.
 	casas_decimais_xtest:
 	move $a0, $s0
@@ -427,7 +449,10 @@ montar_matriz:
 			# Endereço do dado que quero pegar.
 			add $t8, $t5, $t8
 			# Carrega o dado.
-			l.d $f0, 0($t8)
+			# l.d $f0, 0($t8) em instruções:
+			lui $at, 0
+			addu $at, $at, $t8
+			ldc1 $f0, 0($at)
 			# Guarda na matriz.
 			s.d $f0, 0($t9)
 			# Avança para o próximo elemento da matriz.
@@ -491,7 +516,10 @@ montar_ytrain:
 		add $t6, $t6, $t7
 		add $t6, $t3, $t6
 		# Valor a ser colocado na matriz YTrain, em $f0.
-		l.d $f0, 0($t6)
+		# l.d $f0, 0($t6) em instruções:
+		lui $at, 0
+		addu $at, $at, $t6
+		ldc1 $f0, 0($at)
 		# Posição de YTrain em que o valor deve ser guardado, em $t6.
 		mul $t6, $t5, 8
 		add $t6, $t4, $t6
@@ -591,7 +619,11 @@ calcular_vetor_distancias:
 		mul $t5, $t4, 8
 		add $t6, $t3, $t5 # Endereço de onde tenho que guardar.
 		add $t5, $t0, $t5 # Endereço do que tenho que guardar.
-		l.d $f0, 0($t5) # Valor que tenho que guadar.
+		# l.d $f0, 0($t5) em instruções:
+		lui $at, 0
+		addu $at, $at, $t5	 # Valor que tenho que guadar.
+		ldc1 $f0, 0($at)
+
 		s.d $f0, 0($t6) # Guardar o valor.
 		addi $t4, $t4, 1
 		j guardar_no_vetor_Ws
@@ -625,7 +657,11 @@ calcular_vetor_distancias:
 			add $t5, $t1, $t5	# + endereço base do XTrain
 			# Verificar cada valor dessa linha.
 			la $t6, numero_0
-			l.d $f4, 0($t6)
+			# l.d $f4, 0($t6) em instruções:
+			lui $at, 0
+			addu $at, $at, $t6
+			ldc1 $f4, 0($at)
+			
 			li $t6, 0
 			calcular_valor:
 				beq $t6, $t2, fim_calcular_valor	# Se t6 for igual a w, parar
@@ -636,8 +672,16 @@ calcular_vetor_distancias:
 				# Endereço do elemento na linha fixa de Xtest (no vetor de Ws).
 				add $t7, $t3, $t7	# 
 				# Calcular.
-				l.d $f0, 0($t8) # Elemento de Xtrain.
-				l.d $f2, 0($t7) # Elemento de Xtest.
+				# l.d $f0, 0($t8) em instruções:  # Elemento de Xtrain.
+				lui $at, 0
+				addu $at, $at, $t8
+				ldc1 $f0, 0($at)
+				
+				# l.d $f2, 0($t7) em instruções:  # Elemento de Xtest.
+				lui $at, 0
+				addu $at, $at, $t7
+				ldc1 $f2, 0($at)
+				
 				sub.d $f0, $f2, $f0
 				add.d $f4, $f4, $f0
 				addi $t6, $t6, 1
@@ -660,7 +704,10 @@ calcular_vetor_distancias:
 calcular_media_ytrain:
 	# Tamanho do vetor com os índices das K menores distâncias em double.
 	la $t0, k_double
-	l.d $f4, 0($t0)
+	# l.d $f4, 0($t0) em instruções:
+	lui $at, 0
+	addu $at, $at, $t0
+	ldc1 $f4, 0($at)
 	
 	# Tamanho do vetor com os índices das K menores distâncias em int.
 	la $t0, k
@@ -671,7 +718,11 @@ calcular_media_ytrain:
 	li $t1, 0
 	# Somador.
 	la $t9, numero_0
-	l.d $f0, 0($t9)
+	# l.d $f0, 0($t9) em instruções:
+	lui $at, 0
+	addu $at, $at, $t9
+	ldc1 $f0, 0($at)
+	
 	contabilizar:
 		beq $t0, $t1, fim_contabilizar
 		# Descobrir qual é o índice.
@@ -681,7 +732,11 @@ calcular_media_ytrain:
 		# Descobrir o valor em Ytrain correspondente ao índice $t2.
 		mul $t2, $t2, 8
 		add $t2, $t2, $a0
-		l.d $f2, 0($t2)
+		# l.d $f2, 0($t2) em instruções:
+		lui $at, 0
+		addu $at, $at, $t2
+		ldc1 $f2, 0($at)
+		
 		# Somar esse valor ao somador.
 		add.d $f0, $f0, $f2
 		# Ir para próximo valor.
@@ -711,7 +766,10 @@ achar_k_menores_distancias:
     move $t0, $a0         # t0 = endereço do vetor k
     move $t1, $a1         # t1 = endereço do vetor de distâncias
     la $t8, numero_0  # f0 = 0.0
-    l.d $f0, 0($t8)       # f6 = maior valor
+    # l.d $f0, 0($t8) em instruções:
+    lui $at, 0
+    addu $at, $at, $t8
+    ldc1 $f0, 0($at)   
 
     # calculo o tamanho do vetor de distâncias
     la $t2, tamanho
@@ -729,7 +787,10 @@ achar_k_menores_distancias:
     lw $t5, 0($t5)     # t5 = valor de k
 
     la $t4, maior_valor
-    l.d $f6, 0($t4)     # salvo o maior valor em f6
+    # l.d $f6, 0($t4) em instruções:    # salvo o maior valor em f6
+    lui $at, 0
+    addu $at, $at, $t4
+    ldc1 $f6, 0($at)
     
     li $t6, 0		# salvo a posição 0
     li $t3, 0            # t3 = contador de elementos no vetor de K
@@ -739,7 +800,11 @@ achar_k_menores_distancias:
 
 	li $t6, 0            # t6 = resetar o indice do menor valor
         #guardar o primeiro elemento em $f2 para comparações
-        l.d $f2, 0($t1)
+        # l.d $f2, 0($t1) em instruções:
+        	lui $at, 0
+	addu $at, $at, $t1
+	ldc1 $f2, 0($at)
+	
         c.lt.d $f2, $f0 # se o valor for negativo
         bc1t primeiro_negativo
 
@@ -750,7 +815,10 @@ achar_k_menores_distancias:
             beq $t4, $t2, fim_menor_valor
             mul $t7, $t4, 8
             add $t7, $t1, $t7
-            l.d $f4, 0($t7)  # f4 = valor atual
+            # l.d $f4, 0($t7) em instruções:  # f4 = valor atual
+            lui $at, 0
+	    addu $at, $at, $t7
+	    ldc1 $f4, 0($at)
             
             c.lt.d $f4, $f0 # se o valor for negativo
             bc1t e_negativo
@@ -861,7 +929,10 @@ knn:
 		move $a1, $s5
 		jal calcular_media_ytrain
 		
-		l.d $f20, 0($v0)		# Agora f20 possui o valor correto para ser armazenado
+		# l.d $f20, 0($v0) em instruções:	# Agora f20 possui o valor correto para ser armazenado
+		lui $at, 0
+		addu $at, $at, $v0
+		ldc1 $f20, 0($at)
 
 		mul $t0, $s7, 8		# Encontra o deslocamento correto para armazenar
 		add $t0, $t0, $s4	# Encontra o endereço correto para armazenar em ytest
@@ -890,7 +961,10 @@ escrever_ytest:
 	
 	# Carrega a constante 10 no registrador f10
 	la $t0, numero_10
-	l.d $f10, 0($t0)
+	# l.d $f10, 0($t0) em instruções:
+	lui $at, 0
+	addu $at, $at, $t0
+	ldc1 $f10, 0($at)
 	
 	# Coloca quantidade de linhas em s3
 	la $t0, linhas_matriz
@@ -921,7 +995,11 @@ escrever_ytest:
 		mul $t0, $s2, 8
 		add $t0, $t0, $s0
 		# Carrega o valor que esta na linha em f0
-		l.d $f0, 0($t0)
+		# l.d $f0, 0($t0) em instruções:
+		lui $at, 0
+		addu $at, $at, $t0
+		ldc1 $f0, 0($at)
+
 		# Começa calculo para encontrar quantas divisões devem ser feitas
 		calcular_N:
 			c.lt.d $f0, $f10		# Se o numero da linha for menor que 10
