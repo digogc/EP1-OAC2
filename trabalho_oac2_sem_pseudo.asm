@@ -483,11 +483,15 @@ montar_matriz:
 			# Incrementa o contador de elementos da linha.
 			addi $t7, $t7, 1
 			# Se não chegou ao final da linha, preenche o próximo elemento.
-			blt $t7, $t1, preenche_elemento
+			# blt $t7, $t1, preenche_elemento em intruções:
+			slt $at, $t7, $t1
+			bne $at, $0, preenche_elemento
 		# Incrementa contador de linhas
 		addi $t4, $t4, 1
 	# Se não chegou ao final da matriz, preenche a próxima linha
-	blt $t4, $t0, preenche_linha
+	# blt $t4, $t0, preenche_linha em intruções
+	slt $at, $t4, $t0
+	bne $at, $0, preenche_linha
 	
 	# Retornar.
 	jr $ra
