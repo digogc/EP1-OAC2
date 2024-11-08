@@ -154,7 +154,7 @@ escrever_ascii:
 	sw $t0, buffer_escrita	# Salvo o valor do ascii no buffer
 	
 	li $v0, 15
-	move $a0, $s0		# Passar o descritor do arquivo
+	move $a0, $s1		# Passar o descritor do arquivo
 	la $a1, buffer_escrita	# Passar o endereço do que deve ser escrito
 	li $a2, 1		# Passar a quantidade de caracteres a serem escritos
 	syscall
