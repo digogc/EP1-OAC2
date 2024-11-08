@@ -1,4 +1,3 @@
-# LEITURA DE AMBOS OS ARQUIVOS.
 .data
 xtrain: .asciiz "C:/Users/digog/OneDrive/Área de Trabalho/Xtrain.txt"
 xtest: .asciiz "C:/Users/digog/OneDrive/Área de Trabalho/Xtest.txt"
@@ -61,47 +60,6 @@ main:
 	move $a0, $v0		# passa o retorno de knn como argumento para escrever_ytest
 	jal escrever_ytest
 	
-############################################################################################################
-# essa parte podemos copiar e colar na knn, a maneira de utilizar o calcular_vetor_distâncias está correta #
-############################################################################################################
-#		
-#	# Alocar espaço para Vetor de Distâncias.
-#	li $a0, 479
-#	jal alocar_vetores_ytest_e_distancias
-#	move $a3, $v0 # Endereço base do Vetor de Distâncias.
-#	
-#	
-#
-#
-#	# Para cada índice de linha em Xtest, chamar "calcular_vetor_distancias"
-#	# Linhas de Xtest já usadas.
-#	li $s7, 0
-#	# Quantidade total de linhas.
-#	la $s6, tamanho
-#	lw $s6, 0($s6)
-#	addi $s6, $s6, 1
-#	la $t9, w
-#	lw $t9, 0($t9)
-#	la $t8, h
-#	lw $t8, 0($t8)
-#	add $t9, $t9, $t8
-#	sub $s6, $s6, $t9
-#	chamar_calcular_distancias:
-#		beq $s7, $s6, fim_chamar_distancia
-#		move $a0, $s0
-#		move $a1, $s1
-#		move $a2, $s7
-#		jal calcular_vetor_distancias
-#		addi $s7, $s7, 1
-#		j chamar_calcular_distancias	
-#
-#	fim_chamar_distancia:
-#	# Testando.
-#	l.d $f12, 16($a3)
-#	li $v0, 3
-#	syscall
-############################################################################################################
-
 	# Finalizar programa.
 	li $v0, 10
 	syscall
