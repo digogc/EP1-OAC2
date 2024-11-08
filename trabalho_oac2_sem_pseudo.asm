@@ -188,9 +188,6 @@ j inspecionar_num_elementos_xtest
 	# Converter o número inteiro em $t2 para um float, em $f2.
 	mtc1 $t2, $f2
 	cvt.d.w $f2, $f2
-	# la $t3, end_aux
-	# sw $t2, 0($t3)
-	# l.d $f2, 0($t3)
 	
 	# Atualizar o registrador que guarda o número que está sendo trabalhado.
 	la $t3, numero_10
@@ -234,9 +231,7 @@ j inspecionar_num_elementos_xtest
 	# Converter o número inteiro em $t2 para um float, em $f2.
 	mtc1 $t2, $f2
 	cvt.d.w $f2, $f2
-	#la $t3, end_aux
-	#sw $t2, 0($t3)
-	#l.d $f2, 0($t3)
+
 	# Atualizar o registrador que guarda o número que está sendo trabalhado.
 	div.d $f2, $f2, $f6
 	add.d $f0, $f0, $f2
@@ -302,9 +297,6 @@ addi $t7, $t7, 8
 	# Converter o número inteiro em $t2 para um float, em $f2.
 	mtc1 $t2, $f2
 	cvt.d.w $f2, $f2
-	# la $t3, end_aux
-	# sw $t2, 0($t3)
-	# l.d $f2, 0($t3)
 	
 	# Atualizar o registrador que guarda o número que está sendo trabalhado.
 	la $t3, numero_10
@@ -348,9 +340,7 @@ l.d $f6, 0($t3)
 	# Converter o número inteiro em $t2 para um float, em $f2.
 	mtc1 $t2, $f2
 	cvt.d.w $f2, $f2
-	#la $t3, end_aux
-	#sw $t2, 0($t3)
-	#l.d $f2, 0($t3)
+
 	# Atualizar o registrador que guarda o número que está sendo trabalhado.
 	div.d $f2, $f2, $f6
 	add.d $f0, $f0, $f2
@@ -824,16 +814,6 @@ calcula_linhas:
 	sw $s6, linhas_matriz
 	jr $ra
 	
-# Lógica para escrever em arquivo.
-# Divide, até ter algo menos que 10. Escreve o dígito inteiro.
-# Se dividi 2 vezes, faço o caractere que escreve * 100 e subtraio do número inicial.
-# Vou repetindo.
-# Se n tenho mais que dividir o número, escrevo ele e .
-# Depois, vou multiplincado por 10, até ficar maior que 1.
-# Escrevo e subtraio o que coloquei (dividido pelo número de mults).
-# E assim vai.
-# No arquivo, ele quer precisão de 2 casas.
-
 # Função KNN
 # Função que estima valores para YTest utilizando um algoritmo KNN
 # Recebe como parâmetro: endereço de matriz x_train, endereço de matriz x_test e endereço de vetor y_train
