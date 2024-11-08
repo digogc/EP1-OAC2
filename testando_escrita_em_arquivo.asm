@@ -5,10 +5,28 @@ ytest: .asciiz "C:/Users/digog/OneDrive/Área de Trabalho/Ytest.txt"
 buffer_escrita: .word 0
 
 .text
+	# Abrir o arquivo
+	li $v0, 13
+	la $a0, ytest
+	li $a1, 9
+	syscall # Descritor do arquivo está em v0
+	
+	move $s0, $v0	# Salvo o descritor do arquivo
 
+	li $a0, 7
+	jal escrever_ascii
+	
+	# Fechar o arquivo
+	li $v0, 16
+	move $a0, $s0
+	syscall
+	
+	li $v0, 10
+	syscall
+	
 ############################## FUNÇÃO QUE CALCULA O ASCII PAR O INTEIRO E ESCREVE NO ARQUIVO
 #Recebe: valor inteiro do numero que deve ser escrito em a0
-escreve_ascii:
+escrever_ascii:
 	move $t0, $a0		# Valor que deve ser escrito em t0
 	addi $t0, $t0, 48 	# Encontra o codigo ascii do número
 	
