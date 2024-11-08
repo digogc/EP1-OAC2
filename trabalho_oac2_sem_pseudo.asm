@@ -539,7 +539,7 @@ montar_ytrain:
 		# Se ainda há linhas a popular.
 		# Posição do valor a ser colocado na matriz YTrain, em $t6.
 		add $t6, $t9, $t8
-		subi $t6, $t6, 1
+		addi $t6, $t6, -1
 		# mul $t6, $t6, 8 em intruções:
 		addi $at, $0, 8
 		mul $t6, $t6, $at
@@ -649,7 +649,7 @@ calcular_vetor_distancias:
 	move $t1, $a0
 		
 	# Alocar espaço para vetor de Ws (que terá w doubles).
-	subi $sp, $sp, 12
+	addi $sp, $sp, -12
 	sw $ra, 0($sp)
 	sw $t0, 4($sp)
 	sw $t1, 8($sp)
@@ -998,7 +998,7 @@ knn:
 	move $s2, $a2	# s2 = endereço de vetor y_train
 	
 	# Salvar em sp o $ra, porque teremos alguns jumps aqui dentro
-	subi $sp, $sp, 4
+	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
 	# Alocar espaço para Vetor de Distâncias.
@@ -1081,10 +1081,10 @@ escrever_ytest:
 	lw $s3, 0($t0)
 	
 	# Carrega quantidade de linhas -1 em $s7
-	subi $s7, $s3, 1
+	addi $s7, $s3, -1
 	
 	# Como haverá jal dentro dessa função, salvar $ra na pilha
-	subi $sp, $sp, 4
+	addi $sp, $sp, -4
 	sw $ra, 0($sp)
 	
 	# Abrir o arquivo
