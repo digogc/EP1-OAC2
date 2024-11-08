@@ -144,6 +144,7 @@ escrever_ytest:
 	move $a0, $s1	# passar como argumento o descritor
 	syscall
 	
+	jr $ra
 	
 ############################## FUNÇÃO QUE CALCULA O ASCII PAR O INTEIRO E ESCREVE NO ARQUIVO
 #Recebe: valor inteiro do numero que deve ser escrito em a0
