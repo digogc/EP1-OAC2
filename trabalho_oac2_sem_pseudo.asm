@@ -1126,7 +1126,9 @@ escrever_ytest:
 		li $s5, 0	# Inicializo o contador de multiplicações ja realizadas
 		# Agora preciso salvar o primeiro digito do double para escrever no arquivo
 		escreve_antes_do_ponto:
-			bgt $s5, $s4, fim_escreve_antes_do_ponto
+			# bgt $s5, $s4, fim_escreve_antes_do_ponto em insruções:
+			slt $at, $s4, $s5
+			bne $at, 0, fim_escreve_antes_do_ponto
 			# tranformação do primeiro digito do double em int
 			cvt.w.d $f2, $f0		# Salva a parte inteira do valor em um registrador de double
 			mfc1 $s6, $f2		# Move a parte inteira do valor para um registrador int
@@ -1177,7 +1179,9 @@ escrever_ytest:
 		fim_escreve_depois_do_ponto:
 		
 		colocar_enter:
-			bge $s2, $s7, fim_colocar_enter
+			# bge $s2, $s7, fim_colocar_enter em intruções:
+			slt $at, $s2, $s7
+			beq $at, $0, fim_colocar_enter
 			# Colocar o ponto no lugar correto
 			li $t1, 10	# Seleciono o ascii do enter
 			sw $t1, buffer_escrita	# Salvo o valor do ascii no buffer
