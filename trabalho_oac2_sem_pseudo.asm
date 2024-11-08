@@ -256,7 +256,10 @@ eh_barra_xtrain:
 # Terminei de ler esse número. Vou guardá-lo e resetar o registrador intermediário.
 # Guardar na posição certa do espaço já alocado.
 add $t8, $t6, $t7
-s.d $f0, 0($t8)
+# s.d $f0, 0($t8) em instruções:
+lui $at, 0
+addu $at, $at, $t8
+sdc1 $f0, 0($at)
 # Atualizar a posição a guardar.
 addi $t7, $t7, 8
 j ler_novo_num_xtrain
@@ -264,7 +267,10 @@ j ler_novo_num_xtrain
 fim_arquivo_xtrain:
 # Guadar o último número do arquivo.
 add $t8, $t6, $t7
-s.d $f0, 0($t8)
+# s.d $f0, 0($t8) em instruções:
+lui $at, 0
+addu $at, $at, $t8
+sdc1 $f0, 0($at)
 # Fechar o arquivo.
 move $a0, $s0 # Mover o descritor do arquivo para $a0
 li $v0, 16 # Syscall para fechar o arquivo
@@ -375,7 +381,10 @@ eh_barra_xtest:
 # Terminei de ler esse número. Vou guardá-lo e resetar o registrador intermediário.
 # Guardar na posição certa do espaço já alocado.
 add $t8, $t6, $t7
-s.d $f0, 0($t8)
+# s.d $f0, 0($t8) em instruções:
+lui $at, 0
+addu $at, $at, $t8
+sdc1 $f0, 0($at)
 # Atualizar a posição a guardar.
 addi $t7, $t7, 8
 j ler_novo_num_xtest
@@ -383,7 +392,10 @@ j ler_novo_num_xtest
 fim_arquivo_xtest:
 # Guadar o último número do arquivo.
 add $t8, $t6, $t7
-s.d $f0, 0($t8)
+# s.d $f0, 0($t8) em intruções:
+lui $at, 0
+addu $at, $at, $t8
+sdc1 $f0, 0($at)
 # Fechar o arquivo.
 move $a0, $s0 # Mover o descritor do arquivo para $a0
 li $v0, 16 # Syscall para fechar o arquivo
@@ -454,7 +466,10 @@ montar_matriz:
 			addu $at, $at, $t8
 			ldc1 $f0, 0($at)
 			# Guarda na matriz.
-			s.d $f0, 0($t9)
+			# s.d $f0, 0($t9) em intruções:
+			lui $at, 0
+			addu $at, $at, $t9
+			sdc1 $f0, 0($at)
 			# Avança para o próximo elemento da matriz.
 			addi $t9, $t9, 8
 			# Incrementa o contador de elementos da linha.
@@ -523,7 +538,11 @@ montar_ytrain:
 		# Posição de YTrain em que o valor deve ser guardado, em $t6.
 		mul $t6, $t5, 8
 		add $t6, $t4, $t6
-		s.d $f0, 0($t6)
+		# s.d $f0, 0($t6) em instruções:
+		lui $at, 0
+		addu $at, $at, $t6
+		sdc1 $f0, 0($at)
+		
 		addi $t5, $t5, 1
 		j popular_matriz_ytrain
 
@@ -624,7 +643,11 @@ calcular_vetor_distancias:
 		addu $at, $at, $t5	 # Valor que tenho que guadar.
 		ldc1 $f0, 0($at)
 
-		s.d $f0, 0($t6) # Guardar o valor.
+		# s.d $f0, 0($t6) em instruções:  # Guardar o valor.
+		lui $at, 0
+		addu $at, $at, $t6
+		sdc1 $f0, 0($at)
+		
 		addi $t4, $t4, 1
 		j guardar_no_vetor_Ws
 
@@ -691,7 +714,11 @@ calcular_vetor_distancias:
 			# Posicação onde devo guardar.
 			mul $t7, $t0, 8
 			add $t7, $a3, $t7
-			s.d $f4, 0($t7)
+			# s.d $f4, 0($t7) em intruções:
+			lui $at, 0
+			addu $at, $at, $t7
+			sdc1 $f4, 0($at)
+			
 			addi $t0, $t0, 1
 			j calcular_linha	
 		fim_calcular_linha:
@@ -754,7 +781,10 @@ calcular_media_ytrain:
 	syscall
 	
 	# Salva o resultado no endereço alocado e retorna o endereço
-	s.d $f0, 0($v0)
+	# s.d $f0, 0($v0) em intruções:
+	lui $at, 0
+	addu $at, $at, $v0
+	sdc1 $f0, 0($at)
 	
 	jr $ra
 	
@@ -841,7 +871,10 @@ achar_k_menores_distancias:
             #salvar o maior valor no lugar do menor, calcular a posição correta e salvar o maior_valor
             mul $t8, $t6, 8	   # conversao para bytes
             add $t7, $t1, $t8       #posição para inserir maior valor
-            s.d $f6, 0($t7)         #salvar o maior valor na posição em que o menor valor estava anteriormente
+            # s.d $f6, 0($t7) em instruções:   #salvar o maior valor na posição em que o menor valor estava anteriormente
+	    lui $at, 0
+	    addu $at, $at, $t7
+	    sdc1 $f6, 0($at)
 
             j encontrar_k_valores
     
@@ -859,13 +892,21 @@ e_negativo:
     # armazenar o valor positivo no lugar do negativo
     mul $t9, $t4, 8
     add $t7, $t1, $t9
-    s.d $f4, 0($t7)
+    # s.d $f4, 0($t7) em intruções:
+    lui $at, 0
+    addu $at, $at, $t7
+    sdc1 $f4, 0($at)
+    
     j volta_e_negativo
    
 primeiro_negativo:
     sub.d $f2, $f0, $f2 # transformar o valor negativo em positivo
     # armazenar o valor positivo no lugar do negativo
-    s.d $f2, 0($t1)
+    # s.d $f2, 0($t1) em intruções:
+    lui $at, 0
+    addu $at, $at, $t1
+    sdc1 $f2, 0($at)
+    
     j volta_primeiro_negativo
 
 ############################### FUNÇÃO QUE CALCULA A QUANTIDADE DE LINHAS DAS MATRIZES
@@ -937,7 +978,10 @@ knn:
 		mul $t0, $s7, 8		# Encontra o deslocamento correto para armazenar
 		add $t0, $t0, $s4	# Encontra o endereço correto para armazenar em ytest
 
-		s.d $f20, 0($t0)		# Armazenar o valor de ytest no local correto
+		# s.d $f20, 0($t0) em instruções:	# Armazenar o valor de ytest no local correto
+		lui $at, 0
+		addu $at, $at, $t0
+		sdc1 $f20, 0($at)
 		
 		addi $s7, $s7, 1			# ir para a próxima linha fixada
 		j chamar_calcular_distancias	
