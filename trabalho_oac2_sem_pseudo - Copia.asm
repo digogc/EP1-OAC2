@@ -123,11 +123,7 @@ j inspecionar_num_elementos_xtest
 	# Aqui, $t0 tem o número de elementos dos arquivos.
 	# Guardar esse valor na memória.
 	la $t6, tamanho
-	# div $t7, $t0, 16, convertido em instruções:
-	addi $at, $0, 16
-	div $t0, $at
-	mflo $t7
-	
+	div $t7, $t0, 16
 	sw $t7, 0($t6)
 
 	move $a0, $t0
