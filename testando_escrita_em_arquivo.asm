@@ -4,9 +4,15 @@ numero_10: .double 10.0
 ytest: .asciiz "C:/Users/digog/OneDrive/Área de Trabalho/Ytest.txt"
 buffer_escrita: .word 0
 linhas_matriz: .word 6
-numero_10: .double 10.0
+numero_1: .double 1.0
 
 .text
+main:
+	la $a0, vetor
+	jal escrever_ytest
+	
+	li $v0, 10
+	syscall
 
 # Função escrever_ytest
 # Função que recebe o endereço do vetor que armazena o ytest e escreve ele em um arquivo
@@ -18,6 +24,13 @@ escrever_ytest:
 	# Carrega a constante 10 no registrador f10
 	la $t0, numero_10
 	l.d $f10, 0($t0)
+	
+	# Coloca quantidade de linhas em s3
+	la $t0, linhas_matriz
+	lw $s3, 0($t0)
+	
+	# Carrega quantidade de linhas -1 em $s7
+	subi $s7, $s3, 1
 	
 	# Como haverá jal dentro dessa função, salvar $ra na pilha
 	subi $sp, $sp, 4
@@ -31,7 +44,7 @@ escrever_ytest:
 	
 	move $s1, $v0 	# Descritor do arquivo está em s1
 	
-	li $s2, 0 	# Contador de linhas escritas sem s2
+	li $s2, 0 	# Contador de linhas escritas em s2
 	# Loop para acessar todas as linhas
 	acessar_linha:
 		beq $s2, $s3, fim_acessar_linhas
@@ -63,27 +76,64 @@ escrever_ytest:
 			jal escrever_ascii
 			
 			# Subtrai a parte inteira e multiplica por 10
+			cvt.d.w $f4, $f2		# Transformando a parte inteira em double que pode ser usado
+			sub.d $f0, $f0, $f4	# Agora é um valor entre 0 e 1
 			
-			
+			# Multiplicar valor por 10
+			mul.d $f0, $f0, $f10
 			#incrementa o contador de multiplicações
 			addi $s5, $s5, 1
 			j escreve_antes_do_ponto
-
 			
-			
-			
-			
-			
-			
-			
-			
-			fim_escreve_antes_do_ponto
+		fim_escreve_antes_do_ponto:
+		# Colocar o ponto no lugar correto
+		li $t1, 46	# Seleciono o ascii do ponto
+		sw $t1, buffer_escrita	# Salvo o valor do ascii no buffer
+	
+		# Escrever no arquivo
+		li $v0, 15
+		move $a0, $s1
+		la $a1, buffer_escrita
+		li $a2, 1
+		syscall
 		
+		li $s4, 2	# Total de casas depois da virgula
+		li $s5, 0	# Número de casas depois da vírgula já escritas
+		escreve_depois_do_ponto:
+			beq $s5, $s4, fim_escreve_depois_do_ponto
+			# tranformação do primeiro digito do double em int
+			cvt.w.d $f2, $f0		# Salva a parte inteira do valor em um registrador de double
+			mfc1 $s6, $f2		# Move a parte inteira do valor para um registrador int
+			move $a0, $s6		# Passo a parte inteira como parametro
+			jal escrever_ascii
+			
+			# Subtrai a parte inteira e multiplica por 10
+			cvt.d.w $f4, $f2		# Transformando a parte inteira em double que pode ser usado
+			sub.d $f0, $f0, $f4	# Agora é um valor entre 0 e 1
+			
+			# Multiplicar valor por 10
+			mul.d $f0, $f0, $f10
+			#incrementa o contador de multiplicações/casas ja escritas
+			addi $s5, $s5, 1
+			j escreve_depois_do_ponto
+		fim_escreve_depois_do_ponto:
 		
+		colocar_enter:
+			bge $s2, $s7, fim_colocar_enter
+			# Colocar o ponto no lugar correto
+			li $t1, 10	# Seleciono o ascii do enter
+			sw $t1, buffer_escrita	# Salvo o valor do ascii no buffer
+	
+			# Escrever no arquivo
+			li $v0, 15
+			move $a0, $s1
+			la $a1, buffer_escrita
+			li $a2, 1
+			syscall
+			
+		fim_colocar_enter:
 		
-		
-		
-		
+		addi $s2, $s2,1		# Incrementa contador de linhas ja escritas
 		j acessar_linha
 	fim_acessar_linhas:
 	# Restaura para o $ra da função chamadora
@@ -91,7 +141,7 @@ escrever_ytest:
 	addi $sp, $sp, 4
 	# Fechar o arquivo
 	li $v0, 16
-	move $a0, $s0	# passar como argumento o descritor
+	move $a0, $s1	# passar como argumento o descritor
 	syscall
 	
 	
