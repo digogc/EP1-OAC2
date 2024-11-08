@@ -994,7 +994,7 @@ escrever_ytest:
 		li $s5, 0	# Inicializo o contador de multiplicações ja realizadas
 		# Agora preciso salvar o primeiro digito do double para escrever no arquivo
 		escreve_antes_do_ponto:
-			beq $s5, $s4, fim_escreve_antes_do_ponto
+			bgt $s5, $s4, fim_escreve_antes_do_ponto
 			# tranformação do primeiro digito do double em int
 			cvt.w.d $f2, $f0		# Salva a parte inteira do valor em um registrador de double
 			mfc1 $s6, $f2		# Move a parte inteira do valor para um registrador int
