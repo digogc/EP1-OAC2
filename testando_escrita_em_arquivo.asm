@@ -6,6 +6,22 @@ buffer_escrita: .word 0
 
 .text
 
+############################## FUNÇÃO QUE CALCULA O ASCII PAR O INTEIRO E ESCREVE NO ARQUIVO
+#Recebe: valor inteiro do numero que deve ser escrito em a0
+escreve_ascii:
+	move $t0, $a0		# Valor que deve ser escrito em t0
+	addi $t0, $t0, 48 	# Encontra o codigo ascii do número
+	
+	sw $t0, buffer_escrita	# Salvo o valor do ascii no buffer
+	
+	li $v0, 15
+	move $a0, $s0		# Passar o descritor do arquivo
+	la $a1, buffer_escrita	# Passar o endereço do que deve ser escrito
+	li $a2, 1		# Passar a quantidade de caracteres a serem escritos
+	syscall
+	
+	jr $ra
+
 #################################### COMO CRIAR O ARQUIVO E ESCREVER O ASCII NELE
 #
 #	# Abrir o arquivo
@@ -18,6 +34,13 @@ buffer_escrita: .word 0
 #	
 #	li $t1, 53	# Seleciono o ascii desejado
 #	sw $t1, buffer_escrita	# Salvo o valor do ascii no buffer
+#	
+#	# Escrever no arquivo
+#	li $v0, 15
+#	move $a0, $t0
+#	la $a1, buffer_escrita
+#	li $a2, 1
+#	syscall
 #	
 #	# Fechar o arquivo
 #	li $v0, 16
