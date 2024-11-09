@@ -1128,7 +1128,7 @@ escrever_ytest:
 		escreve_antes_do_ponto:
 			# bgt $s5, $s4, fim_escreve_antes_do_ponto em insruções:
 			slt $at, $s4, $s5
-			bne $at, 0, fim_escreve_antes_do_ponto
+			bne $at, $0, fim_escreve_antes_do_ponto
 			# tranformação do primeiro digito do double em int
 			cvt.w.d $f2, $f0		# Salva a parte inteira do valor em um registrador de double
 			mfc1 $s6, $f2		# Move a parte inteira do valor para um registrador int
