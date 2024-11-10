@@ -1,20 +1,37 @@
 .data
+# Endereços dos arquivos que contém os valores de Xtrain e Xtest
 xtrain: .asciiz "C:/Users/digog/OneDrive/Área de Trabalho/Xtrain.txt"
 xtest: .asciiz "C:/Users/digog/OneDrive/Área de Trabalho/Xtest.txt"
+
+# Buffers utilizados para a leitura dos arquivos
 buffer: .space 1
 buffer_cont: .space 1
+
+# Valores em .double para realizar contas e comparações
 numero_0: .double 0.0
 numero_1: .double 1.0
 numero_10: .double 10.0
 numero_100: .double 100.0
+
+# Variável para quantidade de linhas em Xtest e Xtrain
 tamanho: .space 4
+
+# Parâmetros passados para o algoritmo
 w: .word 3
 h: .word 1
 k: .word 2
-k_double: .double 2.0
+k_double: .double 2.0	# Em double para realização de contas
+
+# Maior tamanho para comparações
 maior_valor: .double 1.79769E+308
+
+# Quantidade de linhas nas matrizes
 linhas_matriz: .space 4
+
+# Endereço para a criação do arquivo de ytest
 ytest: .asciiz "C:/Users/digog/OneDrive/Área de Trabalho/Ytest.txt"
+
+# Buffer utilizado para escrita
 buffer_escrita: .word 0
 
 .text
@@ -65,7 +82,7 @@ main:
 
 #################################################### SUB-ROTINAS (FUNÇÕES)
 
-#                 FUNÇÃO PARA LEITURA DE TODOS OS ARQUIVOS NECESSÁRIOS
+###########################          FUNÇÃO PARA LEITURA DE TODOS OS ARQUIVOS NECESSÁRIOS
 ler_todos_arquivos:
 	# Obter descritor do arquivo "xtrain.txt" → ficará em $s0.
 	la $a0, xtrain
@@ -413,7 +430,7 @@ move $v1, $t7
 # Retornar.
 jr $ra
 
-#                      FUNÇÃO PARA CRIAR MATRIX
+###################          FUNÇÃO PARA CRIAR MATRIX
 # Função para alocar e preencher a matriz (Xtest ou Xtrain)
 # Tem como parâmetros: endereço de início dos dados
 # Retorna o endereço de início da matriz já preenchida.
@@ -496,7 +513,7 @@ montar_matriz:
 	# Retornar.
 	jr $ra
 
-#                      FUNÇÃO PARA CRIAR YTRAIN
+#################              FUNÇÃO PARA CRIAR YTRAIN
 
 # Parâmetros:
 # Endereço base da matriz de Xtrain ($a0)
@@ -606,7 +623,7 @@ alocar_vetor_k:
 
     jr $ra              # retorna para a função chamadora
     
-################ FUNÇÃO QUE ALOCA ESPAÇO PARA VETOR DE Ws
+################ FUNÇÃO QUE ALOCA ESPAÇO PARA VETOR DE TAMANHO W
 alocar_vetor_Ws:
 	la $t2, w
 	lw $t2, 0($t2)
@@ -620,7 +637,6 @@ alocar_vetor_Ws:
 	jr $ra
 
 ################ FUNÇÃO QUE MONTA O VETOR DE DISTÂNCIAS
-
 # Parâmetros:
 # Endereço base matriz Xtrain ($a0).
 # Endereço base matriz Xtest ($a1).
