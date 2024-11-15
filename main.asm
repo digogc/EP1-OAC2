@@ -123,6 +123,8 @@ ler_todos_arquivos:
 		beq $t1, $t2, contar_xtest
 		beq $v0, $a2, inspecionar_num_elementos_xtest
 
+	# Adicionar o espaço das ultimas linhas que não são contadas devido a ausência do "\n"
+	addi $t0, $t0, 16
 	j alocar_espaco
 
 contar_xtrain:
@@ -135,9 +137,7 @@ j inspecionar_num_elementos_xtest
 
 	# Abrir espaço para os elementos.
 	alocar_espaco:
-	addi $t0, $t0, 16
-
-	# Aqui, $t0 tem o número de elementos dos arquivos.
+	# Aqui, $t0 tem o espaço necessário para alocar a quantidade correta de elementos.
 	# Guardar esse valor na memória.
 	la $t6, tamanho
 	# div $t7, $t0, 16, convertido em instruções:
