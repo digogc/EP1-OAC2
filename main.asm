@@ -551,8 +551,8 @@ montar_ytrain:
 	
 	# Contador de quantas linhas já inseri no vetor de YTrain, em $t5.
 	addi $t5, $0, 0
-	popular_matriz_ytrain:
-		beq $t5, $t1, terminei_popular_matriz_ytrain
+	popular_vetor_ytrain:
+		beq $t5, $t1, terminei_popular_vetor_ytrain
 		# Se ainda há linhas a popular.
 		# Posição do valor a ser colocado na vetor YTrain, em $t6.
 		add $t6, $t9, $t8
@@ -584,9 +584,9 @@ montar_ytrain:
 		sdc1 $f0, 0($at)
 		
 		addi $t5, $t5, 1
-		j popular_matriz_ytrain
+		j popular_vetor_ytrain
 
-	terminei_popular_matriz_ytrain:
+	terminei_popular_vetor_ytrain:
 	# retornar o endereço base do vetor YTrain.
 	move $v0, $t4
 	jr $ra
