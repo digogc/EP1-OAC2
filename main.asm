@@ -69,8 +69,8 @@ main:
 	move $s1, $v0
 	
 	move $a0, $s0		# endereço de Xtrain em a0
-	move $a1, $s1		# endereço de Xtest em a1
-	move $a2, $s2		# endereço de Ytrain em a2
+	move $a1, $s2		# endereço de Ytrain em a1
+	move $a2, $s1		# endereço de Xtest em a2
 	jal knn
 	
 	move $a0, $v0		# passa o retorno de knn como argumento para escrever_ytest
@@ -1007,11 +1007,11 @@ calcula_linhas:
 	
 # Função KNN
 # Função que estima valores para YTest utilizando um algoritmo KNN
-# Recebe como parâmetro: endereço de matriz x_train, endereço de matriz x_test e endereço de vetor y_train
+# Recebe como parâmetro: endereço de matriz x_train, endereço de vetor y_train e endereço de matriz x_test
 knn:
 	move $s0, $a0	# s0 = endereço de matriz x_train
-	move $s1, $a1	# s1 = endereço de matriz x_test
-	move $s2, $a2	# s2 = endereço de vetor y_train
+	move $s1, $a2	# s1 = endereço de matriz x_test
+	move $s2, $a1	# s2 = endereço de vetor y_train
 	
 	# Salvar em sp o $ra, porque teremos alguns jumps aqui dentro
 	addi $sp, $sp, -4
