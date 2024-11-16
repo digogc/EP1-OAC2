@@ -523,7 +523,7 @@ montar_ytrain:
 	la $t0, tamanho
 	lw $t0, 0($t0)
 
-	# Calcular número de linhas da matriz do YTrain, em $t1.
+	# Calcular número de linhas/elementos do vetor YTrain, em $t1.
 	# Valor de w em $t1 e de h em $t2.
 	la $t9, w
 	lw $t9, 0($t9)
@@ -533,7 +533,7 @@ montar_ytrain:
 	add $t2, $t9, $t8
 	sub $t1, $t1, $t2
 	
-	# Calcular espaço necessário para matriz do Ytrain, em $t2.
+	# Calcular espaço necessário para vetor do Ytrain, em $t2.
 	# mul $t2, $t1, 8 em intruções:
 	addi $at, $0, 8
 	mul $t2, $t1, $at
@@ -541,20 +541,20 @@ montar_ytrain:
 	# Guardar endereço base da matriz de Xtrain em $t3.
 	move $t3, $a0
 	
-	# Alocar o espaço necessário para a matriz YTrain. Posso sobescrever $t2.
+	# Alocar o espaço necessário para o vetor YTrain. Posso sobescrever $t2.
 	move $a0, $t2
 	li $v0, 9
 	syscall
 	
-	# Endereço base do espaço alocado para a matriz de YTrain vai para $t4.
+	# Endereço base do espaço alocado para o vetor de YTrain vai para $t4.
 	move $t4, $v0
 	
-	# Contador de quantas linhas já inseri na matriz de YTrain, em $t5.
+	# Contador de quantas linhas já inseri no vetor de YTrain, em $t5.
 	addi $t5, $0, 0
 	popular_matriz_ytrain:
 		beq $t5, $t1, terminei_popular_matriz_ytrain
 		# Se ainda há linhas a popular.
-		# Posição do valor a ser colocado na matriz YTrain, em $t6.
+		# Posição do valor a ser colocado na vetor YTrain, em $t6.
 		add $t6, $t9, $t8
 		addi $t6, $t6, -1
 		# mul $t6, $t6, 8 em intruções:
@@ -567,7 +567,7 @@ montar_ytrain:
 		
 		add $t6, $t6, $t7
 		add $t6, $t3, $t6
-		# Valor a ser colocado na matriz YTrain, em $f0.
+		# Valor a ser colocado na vetor YTrain, em $f0.
 		# l.d $f0, 0($t6) em instruções:
 		lui $at, 0
 		addu $at, $at, $t6
@@ -587,7 +587,7 @@ montar_ytrain:
 		j popular_matriz_ytrain
 
 	terminei_popular_matriz_ytrain:
-	# retornar o endereço base da matriz YTrain.
+	# retornar o endereço base do vetor YTrain.
 	move $v0, $t4
 	jr $ra
 
