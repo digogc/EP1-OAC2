@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
-#include <omp.h>
+#include <windows.h>
 
 int contarLinhasArquivo(const char* nomeArquivo) {
 
@@ -60,8 +59,7 @@ double **criar_matriz(double *dados, int tamanho, int largura, int altura, int *
 
     double **matriz = (double **)malloc(*linhas_matriz * sizeof(double *));
 
-/***** PARALELIZAÇÃO - CRIAÇÃO E PREENCHIMENTO DAS MATRIZES ************************************************************/
-    #pragma omp parallel for
+/************** Possível paralelização na criação e preenchimento das matrizes *****************************************/
     for (int i = 0; i < *linhas_matriz; i++) {
         matriz[i] = (double *)malloc(largura * sizeof(double));
         for (int j = 0; j < largura; j++) {
@@ -162,12 +160,14 @@ void salvar_YTest_em_arquivo(const char *nome_arquivo, double *yTest, int tamanh
 
 // Função principal do algoritmo KNN
 void knn(double *xTrain, int tamanhoTrain, double *xTest, int tamanhoTest, int largura, int altura, int k) {
-    // Variáveis para medição do tempo
-    clock_t inicio, fim;
+    LARGE_INTEGER inicio, fim, freq;
     double tempo_total;
 
+    // Obter frequência do contador
+    QueryPerformanceFrequency(&freq);
+
     // Início da contagem de tempo
-    inicio = clock();
+    QueryPerformanceCounter(&inicio);
 
     int linhasTrain, linhasTest;
     double **matrizTrain = criar_matriz(xTrain, tamanhoTrain, largura, altura, &linhasTrain);
@@ -200,9 +200,13 @@ void knn(double *xTrain, int tamanhoTrain, double *xTest, int tamanhoTest, int l
     free(yTrain);
     free(yTest);
 
-    fim = clock();
-    tempo_total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+    // Fim da contagem de tempo
+    QueryPerformanceCounter(&fim);
 
+    // Cálculo do tempo total
+    tempo_total = (double)(fim.QuadPart - inicio.QuadPart) / freq.QuadPart;
+
+    // Impressão do tempo total
     printf("Tempo total de execução: %.6f segundos\n", tempo_total);
 }
 
