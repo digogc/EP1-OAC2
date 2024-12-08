@@ -60,7 +60,8 @@ double **criar_matriz(double *dados, int tamanho, int largura, int altura, int *
 
     double **matriz = (double **)malloc(*linhas_matriz * sizeof(double *));
 
-/************** Possível paralelização na criação e preenchimento das matrizes *****************************************/
+/***** PARALELIZAÇÃO - CRIAÇÃO E PREENCHIMENTO DAS MATRIZES ************************************************************/
+    #pragma omp parallel for
     for (int i = 0; i < *linhas_matriz; i++) {
         matriz[i] = (double *)malloc(largura * sizeof(double));
         for (int j = 0; j < largura; j++) {
