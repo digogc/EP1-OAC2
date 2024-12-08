@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <windows.h>
+#include <time.h>
 
 int contarLinhasArquivo(const char* nomeArquivo) {
 
@@ -144,14 +144,12 @@ void salvar_YTest_em_arquivo(const char *nome_arquivo, double *yTest, int tamanh
 
 // Função principal do algoritmo KNN
 void knn(double *xTrain, int tamanhoTrain, double *xTest, int tamanhoTest, int largura, int altura, int k) {
-    LARGE_INTEGER inicio, fim, freq;
+    // Variáveis para medição do tempo
+    clock_t inicio, fim;
     double tempo_total;
 
-    // Obter frequência do contador
-    QueryPerformanceFrequency(&freq);
-
     // Início da contagem de tempo
-    QueryPerformanceCounter(&inicio);
+    inicio = clock();
 
     int linhasTrain, linhasTest;
     double **matrizTrain = criar_matriz(xTrain, tamanhoTrain, largura, altura, &linhasTrain);
@@ -177,13 +175,9 @@ void knn(double *xTrain, int tamanhoTrain, double *xTest, int tamanhoTest, int l
     free(yTrain);
     free(yTest);
 
-    // Fim da contagem de tempo
-    QueryPerformanceCounter(&fim);
+    fim = clock();
+    tempo_total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
 
-    // Cálculo do tempo total
-    tempo_total = (double)(fim.QuadPart - inicio.QuadPart) / freq.QuadPart;
-
-    // Impressão do tempo total
     printf("Tempo total de execução: %.6f segundos\n", tempo_total);
 }
 
