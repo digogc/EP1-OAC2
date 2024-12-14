@@ -62,8 +62,6 @@ double **criar_matriz(double *dados, int tamanho, int largura, int altura, int *
 /***** PARALELIZAR CRIAÇÃO E PREENCHIMENTO DAS MATRIZES **************/
 #pragma omp parallel for
 for (int i = 0; i < *linhas_matriz; i++) {
-    int id = omp_get_thread_num();
-    printf("Sou %d \n", id);
     matriz[i] = (double *)malloc(largura * sizeof(double));
     for (int j = 0; j < largura; j++) {
         matriz[i][j] = dados[i + j];
@@ -221,3 +219,5 @@ int main() {
     scanf("%d", &largura);
     return 0;
 }
+
+// como rodar: gcc -o KNN_paralelizar KNN_paralelizar.c -fopenmp
